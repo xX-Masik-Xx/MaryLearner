@@ -17,7 +17,7 @@ class EquationCardComparison extends StatefulWidget {
 
 class _EquationCardComparisonState extends State<EquationCardComparison> {
   final _textController = TextEditingController();
-  late String equation = generateEquation();
+  late List<int> equation = generateEquation();
   late int correctAnswer = equationAnswer();
   bool isReadOnly = false;
   int isAnswerCorrect = 0;
@@ -48,7 +48,7 @@ class _EquationCardComparisonState extends State<EquationCardComparison> {
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
                 Text(
-                  equation,
+                  equation.first.toString(),
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: screenHeight * 0.05,
@@ -67,7 +67,15 @@ class _EquationCardComparisonState extends State<EquationCardComparison> {
                     ],
                     onChanged: (String? value) => setState(() => currentChosenAnswer = value!),
                   ),
-                )
+                ),
+                Text(
+                  equation.last.toString(),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: screenHeight * 0.05,
+                      fontFamily: 'RubikMonoOne'
+                  ),
+                ),
                 // DropdownButton<String>(
                 //   items: const [
                 //     DropdownMenuItem(child: Text('<')),
@@ -102,21 +110,14 @@ class _EquationCardComparisonState extends State<EquationCardComparison> {
     );
   }
 
-  String generateEquation() {
+  List<int> generateEquation() {
     Random random = Random();
-    int firstNumber = random.nextInt(21);
-    bool equationMark = random.nextBool();
-    int secondNumber = equationMark ? random.nextInt(21 - firstNumber) : random.nextInt(firstNumber + 1);
-    String randomEquation = equationMark ? firstNumber.toString() + "+" + secondNumber.toString() : firstNumber.toString() + "-" + secondNumber.toString();
-    int equationAnswer = equationMark ? firstNumber + secondNumber : firstNumber - secondNumber;
-    setState(() {
-      correctAnswer = equationAnswer;
-    });
-    return(randomEquation + "=");
+    int firstNumber = random.nextInt(101);
+    int secondNumber = random.nextInt(101);
+    return <int>[firstNumber,secondNumber];
   }
 
   int equationAnswer() {
-    equation.substring(-2);
-    return 0;
+    return equation.first < equation.last ? -1 : equation.first > equation.last ? 1 : 0;
   }
 }

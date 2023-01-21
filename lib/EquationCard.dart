@@ -19,7 +19,7 @@ class EquationCard extends StatefulWidget {
 
 class _EquationCardState extends State<EquationCard> {
   final _textController = TextEditingController();
-  late List<int> equation = generateEquation();
+  late String equation = generateEquation();
   late int correctAnswer = equationAnswer();
   bool isReadOnly = false;
   int isAnswerCorrect = 0;
@@ -29,7 +29,7 @@ class _EquationCardState extends State<EquationCard> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-        width: screenWidth * 0.8,
+        width: screenWidth * 0.08,
         height: screenHeight * 0.1125,
         margin: EdgeInsets.symmetric(vertical: screenHeight * 0.014, horizontal: screenWidth * 0.045),
         decoration: BoxDecoration(
@@ -49,7 +49,7 @@ class _EquationCardState extends State<EquationCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
                 Text(
-                  equation.first.toString(),
+                  equation,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: screenHeight * 0.05,
@@ -57,9 +57,9 @@ class _EquationCardState extends State<EquationCard> {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.symmetric(vertical: screenHeight * 0.014, horizontal: screenWidth * 0.01) ,
-                    width: screenHeight * 0.105,
-                    height: screenHeight * 0.7,
+                    //margin: EdgeInsets.symmetric(vertical: screenHeight * 0.14, horizontal: screenWidth * 0.01) ,
+                    width: screenWidth * 0.24,
+                    height: screenHeight * 0.08,
                     decoration: BoxDecoration(
                       color: isAnswerCorrect == 0 ? const Color.fromRGBO(233, 236, 237, 1) : isAnswerCorrect == 1 ? const Color.fromRGBO(220, 254, 224, 1) : const Color.fromRGBO(255, 235, 235, 1),
                       borderRadius: BorderRadius.circular(screenHeight * 0.014),
@@ -106,21 +106,36 @@ class _EquationCardState extends State<EquationCard> {
                         disabledBorder: InputBorder.none,
                       ),
                     ),
+                ),
+                Container(
+                    margin: const EdgeInsets.only(left: 10) ,
+                    width: screenWidth * 0.03,
+                    height: screenHeight * 0.07,
+                    decoration: BoxDecoration(
+                      color: isAnswerCorrect == 0 ? const Color.fromRGBO(233, 236, 237, 1) : isAnswerCorrect == 1 ? const Color.fromRGBO(35, 176, 54, 1): const Color.fromRGBO(236, 91, 95, 1),
+                      borderRadius: BorderRadius.circular(screenHeight * 0.014),
+                    )
                 )
               ]
           ),
         )
     );
   }
-
-  List<int> generateEquation() {
+  String generateEquation() {
     Random random = Random();
-    int firstNumber = random.nextInt(101);
-    int secondNumber = random.nextInt(101);
-    return <int>[firstNumber,secondNumber];
+    int firstNumber = random.nextInt(21);
+    bool equationMark = random.nextBool();
+    int secondNumber = equationMark ? random.nextInt(21 - firstNumber) : random.nextInt(firstNumber + 1);
+    String randomEquation = equationMark ? firstNumber.toString() + "+" + secondNumber.toString() : firstNumber.toString() + "-" + secondNumber.toString();
+    int equationAnswer = equationMark ? firstNumber + secondNumber : firstNumber - secondNumber;
+    setState(() {
+      correctAnswer = equationAnswer;
+    });
+    return(randomEquation + "=");
   }
 
   int equationAnswer() {
-    return equation.first < equation.last ? -1 : equation.first > equation.last ? 1 : 0;
+    equation.substring(-2);
+    return 0;
   }
 }

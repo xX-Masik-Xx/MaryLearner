@@ -10,7 +10,7 @@ class ElevatedGradientButton extends StatelessWidget {
 
   const ElevatedGradientButton({
     Key? key,
-    required this.child,
+    this.child = const Text(""),
     this.gradient = const LinearGradient(
       colors: [Color.fromARGB(255, 98, 0, 234), Color.fromARGB(255, 141, 59, 255)],
       begin: Alignment.bottomCenter,

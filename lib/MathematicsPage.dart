@@ -1,15 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:mary_learner_flutter/ElevatedGradientButton.dart';
+import 'package:mary_learner_flutter/EquationCard.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:provider/provider.dart';
 
-import 'EquationCardList.dart';
-
-class MathematicsPage extends StatefulWidget with ChangeNotifier{
-  MathematicsPage({Key? key, required this.title}) : super(key: key);
-  late int solvedEquations = 0;
-  late int requiredEquationsAmount = 15;
+class MathematicsPage extends StatefulWidget{
+  const MathematicsPage({Key? key, required this.title}) : super(key: key);
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -19,32 +14,44 @@ class MathematicsPage extends StatefulWidget with ChangeNotifier{
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
+  final int requiredEquationsAmount = 15;
+
   final String title;
 
   @override
   State<MathematicsPage> createState() => _MathematicsPageState();
 }
 
-class _MathematicsPageState extends State<MathematicsPage> with ChangeNotifier {
+class _MathematicsPageState extends State<MathematicsPage> with SingleTickerProviderStateMixin{
+  int solvedEquations = 0;
+  late List<AnimatedBuilder> equationCardList = generateEquationCardList();
+  late AnimationController _controller;
+  late List<Animation> _positionAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 15000),
+      vsync: this,
+    );
+
+    _positionAnimation = [for(int i = 0; i < widget.requiredEquationsAmount; i++)
+      Tween<Offset>(
+        begin: const Offset(300, 0),
+        end: const Offset(0, 0))
+          .animate(CurvedAnimation(
+            parent: _controller,
+            curve: (Interval((i)*(1/(widget.requiredEquationsAmount*3)), (i+1)*(1/(widget.requiredEquationsAmount*3)) + 1/(widget.requiredEquationsAmount*1.5), curve: Curves.bounceOut))))];
+    _controller.forward();
+    _controller.addListener(() {setState(() {});});
+  }
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    final EquationCardComparisonList _equationCardsList = EquationCardComparisonList(
-      onCorrectAnswer: () {},
-      amountOfCards: 4,
-    );
-    _equationCardsList.onCorrectAnswer = () {
-      log("called");
-      setState(() {
-        widget.solvedEquations += 1;
-        log(widget.solvedEquations.toString());
-      });
-      if(widget.solvedEquations == 4 || widget.solvedEquations == 8 || widget.solvedEquations == 12) {
-        log("if called");
-        _equationCardsList.removeCard2();
-      }
-    };
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -76,84 +83,103 @@ class _MathematicsPageState extends State<MathematicsPage> with ChangeNotifier {
 
         body: Stack(
             children: [
-              _equationCardsList,
+              Container(
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 12,
+                        blurRadius: 7,
+                      )
+                    ],
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[200]
+                ),
+                height: screenHeight*0.574,
+                child: RawScrollbar(
+                  crossAxisMargin: 2.5,
+                  thumbColor: Colors.yellow[700],
+                  radius: const Radius.circular(15),
+                  thickness: 16,
+                  isAlwaysShown: true,
+                  interactive: true,
+                  child: ListView(
+                    physics: const BouncingScrollPhysics(),
+                    children: equationCardList,
+                  ),
+                ),
+              ),
               Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                      margin: const EdgeInsets.only(bottom: 15.0),
-                      child: CircularPercentIndicator(
-                          radius: screenHeight * 0.125,
-                          lineWidth: screenHeight * 0.015625,
-                          percent: widget.solvedEquations / widget.requiredEquationsAmount,
-                          progressColor: Colors.yellow[600],
-                          backgroundColor: Colors.grey.shade100,
-                          circularStrokeCap: CircularStrokeCap.round,
-                          animation: true,
-                          animationDuration: 1000,
-                          curve: Curves.bounceOut,
+                  child: SizedBox(
+                    height: screenHeight * 0.318,
+                    width: screenWidth,
+                    child: CircularPercentIndicator(
+                        radius: screenHeight * 0.125,
+                        lineWidth: screenHeight * 0.015625,
+                        percent: solvedEquations / widget.requiredEquationsAmount,
+                        progressColor: Colors.yellow[600],
+                        backgroundColor: Colors.grey.shade100,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        animation: true,
+                        animationDuration: 1000,
+                        curve: Curves.bounceOut,
 
-                          center: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [Colors.red, Colors.orange],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
+                        center: Container(
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [Colors.red, Colors.orange],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: ElevatedGradientButton(
+                              child: Text(
+                                '⭐',
+                                style: TextStyle(
+                                    color: Color.lerp(Colors.deepPurpleAccent[100], const Color(0xFFFDD835), solvedEquations / widget.requiredEquationsAmount),
+                                    fontSize: solvedEquations != widget.requiredEquationsAmount ? screenHeight * 0.115 : screenHeight * 0.125,
+                                    fontFamily: 'SegoeUI'
                                 ),
                               ),
-                              child: Container(
-                                width: screenHeight * 0.20,
-                                height: screenHeight * 0.20,
-                                decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                        colors: [Color.fromARGB(
-                                            255, 98, 0, 234), Color.fromARGB(
-                                            255, 141, 59, 255)
-                                        ],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        screenHeight * 0.4),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 1.5),
-                                        blurRadius: 1.5,
-                                      ),
-                                    ]),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                      onTap: () {
-                                        if(widget.solvedEquations == widget.requiredEquationsAmount) {
-                                          Navigator.pop(context);
-                                        }
-                                        else if((widget.solvedEquations == 4 || widget.solvedEquations == 8 || widget.solvedEquations == 12)) {
-                                          _equationCardsList.removeCard2();
-                                          log(_equationCardsList.usedCards.toString());
-                                        }
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          '⭐',
-                                          style: TextStyle(
-                                              color: const Color(0xFFFDD835),
-                                              fontSize: screenHeight * 0.115,
-                                              fontFamily: 'SegoeUI'
-                                          ),
-                                        ),
-                                      )
-                                  ),
-                                ),
-                              )
-                          )
+                              height: screenHeight * 0.2,
+                              width: screenHeight * 0.2,
+                              borderRadius: screenHeight * 0.4,
+                              onPressed: () {
+                                  if(solvedEquations == widget.requiredEquationsAmount) {
+                                    Navigator.pushNamed(context, '/matheChoice');
+                                  }
+                                },
+                            )
+                        )
 
-                      )
+                    ),
                   )
               ),
             ]
         )
     );
+  }
+
+  List<AnimatedBuilder> generateEquationCardList() {
+    List<AnimatedBuilder> resultedList = [for(int i = 0; i < widget.requiredEquationsAmount; i++)
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (BuildContext context, _) {
+            return Transform.translate(
+              offset: _positionAnimation[i].value ?? const Offset(300, 0),
+              child: EquationCard(onCorrectAnswer: onCorrectAnswer),
+            );
+          },
+        )
+      ];
+    return resultedList;
+  }
+
+  void onCorrectAnswer() {
+    setState(() {
+      solvedEquations++;
+    });
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mary_learner_flutter/MathematicsComparisonPage.dart';
 
 import 'ElevatedGradientButton.dart';
-import 'MathematicsPage.dart';
 
 class MathChoicePage extends StatelessWidget {
   const MathChoicePage({Key? key}) : super(key: key);
@@ -10,6 +8,7 @@ class MathChoicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,12 +36,12 @@ class MathChoicePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedGradientButton(
-                  width: screenHeight * 0.27,
-                  height: screenHeight * 0.27,
+                  width: (screenWidth-50)/2,
+                  height: (screenWidth-50)/2,
                   borderRadius: 25,
                   onPressed: () {
                     // Pushing a route directly, WITHOUT using a named route
-                    Navigator.pushNamed(context, '/math');
+                    Navigator.pushNamed(context, '/mathe');
                   },
                   child: const Text(
                     '+/-',
@@ -55,12 +54,12 @@ class MathChoicePage extends StatelessWidget {
                   ),
                 ),
                 ElevatedGradientButton(
-                  width: screenHeight * 0.27,
-                  height: screenHeight * 0.27,
+                  width: (screenWidth-50)/2,
+                  height: (screenWidth-50)/2,
                   borderRadius: 25,
                   onPressed: () {
                     // Pushing a route directly, WITHOUT using a named route
-                    Navigator.pushNamed(context, '/mathComparison');
+                    Navigator.pushNamed(context, '/matheComparison');
                   },
                   child: const Text(
                     'Сравнение',

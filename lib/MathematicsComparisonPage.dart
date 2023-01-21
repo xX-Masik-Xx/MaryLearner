@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import 'EquationCardList.dart';
+import 'EquationCardComparisonList.dart';
 
 class MathematicsComparisonPage extends StatefulWidget with ChangeNotifier{
   MathematicsComparisonPage({Key? key, required this.title}) : super(key: key);

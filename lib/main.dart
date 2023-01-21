@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mary_learner_flutter/ElevatedGradientButton.dart';
-import 'package:mary_learner_flutter/MathChoicePage.dart';
+import 'package:mary_learner_flutter/MatheChoicePage.dart';
 import 'package:mary_learner_flutter/MathematicsComparisonPage.dart';
 
 import 'MathematicsPage.dart';
@@ -32,9 +32,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: <String, WidgetBuilder> {
         '/': (context) => const MyHomePage(title: 'Home Page'),
-        '/mathChoice': (context) => const MathChoicePage(),
-        '/math': (context) => MathematicsPage(title: "Math here!"),
-        '/mathComparison': (context) => MathematicsComparisonPage(title: "Math comparison here!")
+        '/matheChoice': (context) => const MathChoicePage(),
+        '/mathe': (context) => const MathematicsPage(title: "Math here!"),
+        '/matheComparison': (context) => MathematicsComparisonPage(title: "Math comparison here!")
       },
     );
   }
@@ -90,21 +90,21 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedGradientButton(
-            width: screenHeight * 0.3,
-            height: screenHeight * 0.3,
-            borderRadius: 25,
-            onPressed: () {
-              // Pushing a route directly, WITHOUT using a named route
-              Navigator.pushNamed(context, '/mathChoice');
-            },
-            child: const Text(
-              'Математика',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w900,
-                  fontFamily: 'Nunito-Black'
-              ),
+              width: screenHeight * 0.3,
+              height: screenHeight * 0.3,
+              borderRadius: 25,
+              onPressed: () {
+                // Pushing a route directly, WITHOUT using a named route
+                Navigator.pushNamed(context, '/matheChoice');
+              },
+              child: const Text(
+                'Математика',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'Nunito-Black'
+                ),
             ),
           ),
             ]
