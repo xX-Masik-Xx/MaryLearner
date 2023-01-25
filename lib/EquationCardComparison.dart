@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -56,17 +57,42 @@ class _EquationCardComparisonState extends State<EquationCardComparison> {
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  width: screenWidth * 0.16,
+                  height: screenHeight * 0.08,
                   child: DropdownButton(
-                    value: currentChosenAnswer,
-                    items: const [
-                      DropdownMenuItem(value: '∧' ,child: Text('∧')),
-                      DropdownMenuItem(value: '<' ,child: Text('<')),
-                      DropdownMenuItem(value: '>' ,child: Text('>')),
-                      DropdownMenuItem(value: '=' ,child: Text('=')),
-                    ],
-                    onChanged: (String? value) => setState(() => currentChosenAnswer = value!),
-                  ),
+                      value: currentChosenAnswer != "∧" ? currentChosenAnswer : null,
+                      items: [">", "<", "="].map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            e,
+                            style: TextStyle(
+                                color: isAnswerCorrect == 0 ? Colors.deepPurpleAccent[700] : isAnswerCorrect == 1 ? const Color.fromRGBO(35, 176, 54, 1): const Color.fromRGBO(236, 91, 95, 1),
+                                fontSize: screenHeight * 0.05,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'Nunito-Black'
+                            ),
+                          ),
+                        ),
+                      )).toList(),
+                      onChanged: isReadOnly ? (value) {} : (String? value) => setState(() => currentChosenAnswer = value!),
+                      dropdownColor: const Color.fromRGBO(233, 236, 237, 1),
+                      icon: const Icon(
+                        Icons.arrow_downward,
+                        color: Colors.yellow,
+                      ),
+                    //   hint: Container(
+                    //   //margin: EdgeInsets.symmetric(vertical: screenHeight * 0.14, horizontal: screenWidth * 0.01) ,
+                    //     width: screenWidth * 0.24,
+                    //     height: screenHeight * 0.08,
+                    //     decoration: BoxDecoration(
+                    //       color: isAnswerCorrect == 0 ? const Color.fromRGBO(233, 236, 237, 1) : isAnswerCorrect == 1 ? const Color.fromRGBO(220, 254, 224, 1) : const Color.fromRGBO(255, 235, 235, 1),
+                    //       borderRadius: BorderRadius.circular(screenHeight * 0.014),
+                    //     ),
+                    // ),
+                      underline: Container(),
+                    ),
                 ),
                 Text(
                   equation.last.toString(),

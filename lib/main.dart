@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mary_learner_flutter/ElevatedGradientButton.dart';
 import 'package:mary_learner_flutter/MatheChoicePage.dart';
-import 'package:mary_learner_flutter/MathematicsComparisonPage.dart';
 
 import 'MathematicsPage.dart';
 
@@ -33,8 +32,8 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder> {
         '/': (context) => const MyHomePage(title: 'Home Page'),
         '/matheChoice': (context) => const MathChoicePage(),
-        '/mathe': (context) => const MathematicsPage(title: "Math here!"),
-        '/matheComparison': (context) => MathematicsComparisonPage(title: "Math comparison here!")
+        '/mathe': (context) => const MathematicsPage(title: "Math here!", cardType: MatheCardType.calculation),
+        '/matheComparison': (context) => const MathematicsPage(title: "Math here!", cardType: MatheCardType.comparison)
       },
     );
   }
